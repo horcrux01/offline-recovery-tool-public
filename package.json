@@ -23,7 +23,7 @@
     "@mui/x-data-grid": "5.17.26",
     "@reduxjs/toolkit": "^1.9.1",
     "@rollup/plugin-inject": "^5.0.5",
-    "axios": "1.7.4",
+    "axios": "1.8.2",
     "buffer": "6.0.3",
     "ecies-wasm": "0.2.0",
     "jszip": "3.10.1",
