@@ -5,6 +5,8 @@
 
 Install npm: https://nodejs.org/en
 
+Run `npm -v` to verify the installation
+
 npm install --global yarn
 
 yarn --version
