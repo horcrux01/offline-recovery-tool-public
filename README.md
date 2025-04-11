@@ -3,6 +3,8 @@
 
 ### 1. Install node.js and yarn
 
+Install npm: https://nodejs.org/en
+
 npm install --global yarn
 
 yarn --version
