@@ -1,18 +1,20 @@
 # offline-recovery-tool-public
 
 
-### 1. Install node.js and yarn
+1. Install npm: https://nodejs.org/en
 
-Install npm: https://nodejs.org/en
+2. Open the terminal in your machine and run `npm -v` to verify the installation
 
-Run `npm -v` to verify the installation
+3. Install git, run the commands `winget install --id GitHub.cli` then `winget upgrade --id GitHub.cli`
 
-`npm install --global yarn`
+4. `git clone https://github.com/horcrux01/offline-recovery-tool-public.git`
 
-`yarn --version`
+5. `cd offline-recovery-tool-public`
 
-### 2. Run the local recovery tool
+6. `npm install --global yarn`
 
-`yarn install`
+7. `yarn --version`
 
-`yarn run dev` (Tool would open in browser at http://localhost:5173/)
+8. `yarn install`
+
+9. `yarn run dev` (Tool would open in the browser at http://localhost:5173/)
