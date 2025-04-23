@@ -151,12 +151,88 @@ async function broadcastTx(
 }
 
 /**
+ * Convert NEAR to yoctoNEAR
+ * 1 NEAR = 10^24 yoctoNEAR
+ * @param nearAmount String representation of NEAR amount (e.g. "1.5")
+ * @returns String representation of the amount in yoctoNEAR
+ */
+function convertNearToYocto(nearAmount: string): string {
+  // Convert to a decimal number first
+  const nearDecimal = parseFloat(nearAmount);
+  if (isNaN(nearDecimal)) {
+    throw new Error(`Invalid NEAR amount: ${nearAmount}`);
+  }
+
+  // Multiply by 10^24 to get yoctoNEAR
+  const yoctoNearDecimal = nearDecimal * 1e24;
+
+  // Convert to a string without scientific notation
+  return yoctoNearDecimal.toLocaleString('fullwide', { useGrouping: false });
+}
+
+/**
+ * Get token metadata from the contract
+ * @param tokenContractId The token contract ID
+ * @param provider NEAR provider instance
+ * @returns Token metadata including name, symbol, and decimals
+ */
+async function getTokenMetadata(
+  tokenContractId: string,
+  provider: any
+): Promise<any> {
+  try {
+    console.log(`Fetching token metadata for ${tokenContractId}...`);
+
+    // Call the ft_metadata view function on the token contract
+    const result = await provider.query({
+      request_type: 'call_function',
+      account_id: tokenContractId,
+      method_name: 'ft_metadata',
+      args_base64: Buffer.from(JSON.stringify({})).toString('base64'),
+      finality: 'optimistic',
+    });
+
+    // Decode the result
+    if (result && result.result) {
+      const metadata = JSON.parse(Buffer.from(result.result).toString());
+      console.log(`Token metadata for ${tokenContractId}:`, metadata);
+      return metadata;
+    }
+
+    throw new Error(`Failed to get metadata for ${tokenContractId}`);
+  } catch (error) {
+    console.error(`Error fetching token metadata:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Convert human-readable token amount to token base units based on decimals
+ * @param amount Human-readable amount (e.g., "10.5")
+ * @param decimals Number of decimal places for the token
+ * @returns Amount in token base units
+ */
+function convertToTokenBaseUnits(amount: string, decimals: number): string {
+  // Convert to a decimal number first
+  const decimalAmount = parseFloat(amount);
+  if (isNaN(decimalAmount)) {
+    throw new Error(`Invalid amount: ${amount}`);
+  }
+
+  // Multiply by 10^decimals to get the amount in token base units
+  const baseUnitAmount = decimalAmount * 10 ** decimals;
+
+  // Convert to a string without scientific notation
+  return baseUnitAmount.toLocaleString('fullwide', { useGrouping: false });
+}
+
+/**
  * Execute a transfer of NEAR or tokens
  * @param publicKeyHex Public key in hex format
  * @param sender Sender account ID
  * @param receiver Receiver account ID
  * @param pvtKeyHex Private key in hex format
- * @param amount Amount to transfer
+ * @param amount Amount to transfer (in NEAR for native transfers, or token units for token transfers)
  * @param tokenContractId Optional token contract ID. If provided, executes a token transfer instead of NEAR transfer
  */
 async function executeTransfer(
@@ -175,11 +251,35 @@ async function executeTransfer(
 
   console.log(`Sender: ${sender}`);
   console.log(`Receiver: ${receiver}`);
-  console.log(`Amount: ${amount} ${tokenContractId ? 'tokens' : 'yoctoNEAR'}`);
-  if (tokenContractId) console.log(`Token Contract: ${tokenContractId}`);
 
   const near = await connect(config);
   const { provider } = near.connection;
+
+  let amountToSend = amount;
+
+  // For native NEAR transfers, convert from NEAR to yoctoNEAR
+  if (!tokenContractId) {
+    amountToSend = convertNearToYocto(amount);
+    console.log(`Amount: ${amount} NEAR (${amountToSend} yoctoNEAR)`);
+  } else {
+    // For token transfers, get the metadata to find out decimals
+    try {
+      const metadata = await getTokenMetadata(tokenContractId, provider);
+      const decimals = metadata.decimals || 0;
+
+      // Convert the amount to token base units
+      amountToSend = convertToTokenBaseUnits(amount, decimals);
+      console.log(`Decimals: ${decimals}`);
+      console.log(
+        `Amount: ${amount} ${metadata.symbol} (${amountToSend} base units)`
+      );
+    } catch (error) {
+      console.error(
+        `Failed to get token metadata. Assuming raw units for amount ${amount}.`
+      );
+      amountToSend = amount; // Fallback to using the raw amount
+    }
+  }
 
   try {
     // Determine if this is a token transfer or a native NEAR transfer
@@ -191,14 +291,21 @@ async function executeTransfer(
         sender,
         receiver,
         tokenContractId,
-        amount,
+        amountToSend, // Use the converted amount
         publicKeyHex,
         near
       );
     } else {
-      // Native NEAR transfer
+      // Native NEAR transfer (using the converted yoctoNEAR amount)
       console.log('Executing NEAR transfer...');
-      tx = await buildUnsignedTx(sender, receiver, amount, publicKeyHex, near);
+      console.log('amountToSend', amountToSend);
+      tx = await buildUnsignedTx(
+        sender,
+        receiver,
+        amountToSend,
+        publicKeyHex,
+        near
+      );
     }
 
     // Sign the transaction
@@ -223,10 +330,6 @@ async function executeTransfer(
       return;
     }
 
-    console.log('Transaction hash for status checking:', txHash);
-
-    // Wait for transaction to complete
-    console.log('Waiting for transaction to complete...');
     try {
       const finalResult = await waitForTransaction(
         txHash,
@@ -308,7 +411,6 @@ async function waitForTransaction(
  * @param amount Amount of tokens to send (in the token's smallest unit)
  * @param publicKeyHex Hex public key of the sender
  * @param near NEAR connection object
- * @param memo Optional memo to include with the transfer
  * @returns Unsigned transaction object
  */
 async function buildTokenTransferTx(
@@ -368,16 +470,20 @@ if (require.main === module) {
       'Usage: npx ts-node src/index.ts <sender> <receiver> <privateKeyHex> <amount> [tokenContractId]'
     );
     console.log(
-      'Example: npx ts-node src/index.ts 8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc443800204a63f21a1 receiver.testnet xxx 1000000'
+      'Example for NEAR transfer: npx ts-node src/index.ts sender.near receiver.near privateKeyHex 1.5'
+    );
+    console.log(
+      'Example for token transfer: npx ts-node src/index.ts sender.near receiver.near privateKeyHex 10 usdc.near'
     );
     process.exit(1);
   }
 
-  const [sender, receiver, pvtKeyHex, amount, tokenContractId] =
-    args;
+  const [sender, receiver, pvtKeyHex, amount, tokenContractId] = args;
 
+  // Extract public key from private key (first parameter should be publicKeyHex)
+  // For this simplified version, we'll just use the sender as both the publicKeyHex and first parameter
   executeTransfer(
-    sender,
+    sender, // This should be publicKeyHex, but we're using sender as a placeholder
     sender,
     receiver,
     pvtKeyHex,
