@@ -7,5 +7,5 @@ const child = spawn('yarn', ['run','dev'], {
 })
 
 child.unref()
-console.log('🛫 Dev server launched in background')
+console.log('Dev server launched in background')
 
