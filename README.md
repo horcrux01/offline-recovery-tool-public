@@ -87,10 +87,10 @@ receiver: recipient’s NEAR account
 
 privateKeyHex: hex key from the recovery process
 
-amount: number of tokens to transfer in minimal units
+amount: tokens to transfer
 
 tokenContractId (optional): NEAR contract ID for fungible tokens; skip for native NEAR 
 
 Example: transfer USDC from `8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc443800204a63f21a1` to `receiver.near` (USDC contract ID `17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1`):
  
-`npx tsx src/recoveryTransaction/near.ts 8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc443800204a63f21a1 receiver.near 01213213213213213213213 10000000 17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1`
+`npx tsx src/recoveryTransaction/near.ts 8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc443800204a63f21a1 receiver.near 01213213213213213213213 1 17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1`
