@@ -1,5 +1,7 @@
 # offline-recovery-tool-public
 
+## Performing recovery of Wallet private keys
+
 ### Step 1: Install Node.js (npm)
 
 Visit https://nodejs.org/en
@@ -64,7 +66,31 @@ This might take a few minutes to complete
 
 ### Step 10: Run the Tool
 
-Type `yarn run dev` and press Enter
+Type `yarn run dev &` and press Enter
 
 The tool will automatically open in your web browser at http://localhost:5173/
 If it doesn't open automatically, open your browser and type that address in the address bar
+
+## Creating Transactions for EdDSA based blockchains
+
+### Near
+
+To send tokens with our NEAR wallet script, simply run the following in your terminal:
+
+`npx tsx src/recoveryTransaction/near.ts <sender> <receiver> <privateKeyHex> <amount> [tokenContractId]")`
+ 
+This uses ts-node to compile and execute the transfer script at src/index.ts. Arguments:
+
+sender: your PV wallet’s NEAR account ID
+
+receiver: recipient’s NEAR account
+
+privateKeyHex: hex key from the recovery process
+
+amount: number of tokens to transfer in minimal units
+
+tokenContractId (optional): NEAR contract ID for fungible tokens; skip for native NEAR 
+
+Example: transfer USDC from `8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc443800204a63f21a1` to `receiver.near` (USDC contract ID `17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1`):
+ 
+`npx tsx src/recoveryTransaction/near.ts 8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc443800204a63f21a1 receiver.near 01213213213213213213213 10000000 17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1`
