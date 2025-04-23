@@ -77,7 +77,7 @@ If it doesn't open automatically, open your browser and type that address in the
 
 To send tokens with our NEAR wallet script, simply run the following in your terminal:
 
-`npx tsx src/recoveryTransaction/near.ts <sender> <receiver> <privateKeyHex> <amount> [tokenContractId]")`
+`npx tsx src/recoveryTransaction/near.ts <sender> <receiver> <privateKeyHex> <amount> [tokenContractId])`
  
 This uses ts-node to compile and execute the transfer script at src/index.ts. Arguments:
 
