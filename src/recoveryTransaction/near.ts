@@ -258,7 +258,6 @@ async function executeTransfer(
   let amountToSend = amount;
 
   // For native NEAR transfers, convert from NEAR to yoctoNEAR
-  console.log('tokenContractId', amount, tokenContractId);
   if (!tokenContractId) {
     amountToSend = convertNearToYocto(amount);
     console.log(`Amount: ${amount} NEAR (${amountToSend} yoctoNEAR)`);
@@ -270,13 +269,10 @@ async function executeTransfer(
 
       // Convert the amount to token base units
       amountToSend = convertToTokenBaseUnits(amount, decimals);
-
-      console.log(`Token: ${metadata.name} (${metadata.symbol})`);
       console.log(`Decimals: ${decimals}`);
       console.log(
         `Amount: ${amount} ${metadata.symbol} (${amountToSend} base units)`
       );
-      console.log(`Token Contract: ${tokenContractId}`);
     } catch (error) {
       console.error(
         `Failed to get token metadata. Assuming raw units for amount ${amount}.`
@@ -334,10 +330,6 @@ async function executeTransfer(
       return;
     }
 
-    console.log('Transaction hash for status checking:', txHash);
-
-    // Wait for transaction to complete
-    console.log('Waiting for transaction to complete...');
     try {
       const finalResult = await waitForTransaction(
         txHash,
@@ -419,7 +411,6 @@ async function waitForTransaction(
  * @param amount Amount of tokens to send (in the token's smallest unit)
  * @param publicKeyHex Hex public key of the sender
  * @param near NEAR connection object
- * @param memo Optional memo to include with the transfer
  * @returns Unsigned transaction object
  */
 async function buildTokenTransferTx(
