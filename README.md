@@ -81,7 +81,7 @@ To send tokens with our NEAR wallet script, simply run the following in your ter
  
 This uses ts-node to compile and execute the transfer script at src/index.ts. Arguments:
 
-sender: your PV wallet’s NEAR account ID
+sender: your PV wallet’s NEAR account address
 
 receiver: recipient’s NEAR account
 
