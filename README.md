@@ -66,7 +66,7 @@ This might take a few minutes to complete
 
 ### Step 10: Run the Tool
 
-Type `yarn run dev &` and press Enter
+Type `yarn dev:detach` and press Enter
 
 The tool will automatically open in your web browser at http://localhost:5173/
 If it doesn't open automatically, open your browser and type that address in the address bar
