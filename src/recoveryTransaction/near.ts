@@ -17,14 +17,14 @@ const sha512 = async (...messages: Uint8Array[]) => {
 };
 
 export async function eddsaSign(
-    privateKey: bigint,
-    message: Uint8Array | string,
-    hasher: (...msgs: Uint8Array[]) => Promise<Uint8Array> = sha512
+  privateKey: bigint,
+  message: Uint8Array | string,
+  hasher: (...msgs: Uint8Array[]) => Promise<Uint8Array> = sha512
 ): Promise<Uint8Array> {
   const { ExtendedPoint, CURVE: edCURVE, etc } = await import('@noble/ed25519');
 
   const messagesBytes =
-      typeof message === 'string' ? Buffer.from(message, 'hex') : message;
+    typeof message === 'string' ? Buffer.from(message, 'hex') : message;
   const messageBytes = concatBytes(messagesBytes);
   const seed = randomBytes(32);
   const privateKeyBytes = numberToBytesLE(privateKey, 32);
@@ -50,9 +50,9 @@ export async function eddsaSign(
  * This ensures we have the most up-to-date nonce value
  */
 async function getLatestNonce(
-    accountId: string,
-    publicKey: PublicKey,
-    provider: any
+  accountId: string,
+  publicKey: PublicKey,
+  provider: any
 ): Promise<bigint> {
   try {
     // Get the current access key info directly from the RPC endpoint
@@ -74,17 +74,17 @@ async function getLatestNonce(
   } catch (error) {
     console.error('Error getting latest nonce:', error);
     throw new Error(
-        `Failed to get nonce for ${publicKey.toString()}: ${error}`
+      `Failed to get nonce for ${publicKey.toString()}: ${error}`
     );
   }
 }
 
 async function buildUnsignedTx(
-    senderId: string,
-    receiverId: string,
-    amountYocto: string,
-    publicKeyHex: string,
-    near: any
+  senderId: string,
+  receiverId: string,
+  amountYocto: string,
+  publicKeyHex: string,
+  near: any
 ) {
   console.log('publicKeyHex', publicKeyHex);
 
@@ -106,12 +106,12 @@ async function buildUnsignedTx(
 
   const actions = [transactions.transfer(BigInt(amountYocto))];
   return transactions.createTransaction(
-      senderId,
-      publicKey,
-      receiverId,
-      nonce, // Using latest nonce from network
-      actions,
-      bs58.decode(hash)
+    senderId,
+    publicKey,
+    receiverId,
+    nonce, // Using latest nonce from network
+    actions,
+    bs58.decode(hash)
   );
 }
 
@@ -127,9 +127,9 @@ async function sign(txnMessage: string, pvtKeyHex: string) {
 }
 
 async function broadcastTx(
-    tx: transactions.Transaction,
-    signature: any,
-    provider: any
+  tx: transactions.Transaction,
+  signature: any,
+  provider: any
 ) {
   const signatureBytes = Buffer.from(signature.data, 'base64');
 
@@ -176,17 +176,20 @@ function convertNearToYocto(nearAmount: string): string {
  * @param provider NEAR provider instance
  * @returns Token metadata including name, symbol, and decimals
  */
-async function getTokenMetadata(tokenContractId: string, provider: any): Promise<any> {
+async function getTokenMetadata(
+  tokenContractId: string,
+  provider: any
+): Promise<any> {
   try {
     console.log(`Fetching token metadata for ${tokenContractId}...`);
 
     // Call the ft_metadata view function on the token contract
     const result = await provider.query({
-      request_type: "call_function",
+      request_type: 'call_function',
       account_id: tokenContractId,
-      method_name: "ft_metadata",
-      args_base64: Buffer.from(JSON.stringify({})).toString("base64"),
-      finality: "optimistic"
+      method_name: 'ft_metadata',
+      args_base64: Buffer.from(JSON.stringify({})).toString('base64'),
+      finality: 'optimistic',
     });
 
     // Decode the result
@@ -233,12 +236,12 @@ function convertToTokenBaseUnits(amount: string, decimals: number): string {
  * @param tokenContractId Optional token contract ID. If provided, executes a token transfer instead of NEAR transfer
  */
 async function executeTransfer(
-    publicKeyHex: string,
-    sender: string,
-    receiver: string,
-    pvtKeyHex: string,
-    amount: string,
-    tokenContractId?: string
+  publicKeyHex: string,
+  sender: string,
+  receiver: string,
+  pvtKeyHex: string,
+  amount: string,
+  tokenContractId?: string
 ) {
   const config = {
     networkId: 'mainnet',
@@ -270,10 +273,14 @@ async function executeTransfer(
 
       console.log(`Token: ${metadata.name} (${metadata.symbol})`);
       console.log(`Decimals: ${decimals}`);
-      console.log(`Amount: ${amount} ${metadata.symbol} (${amountToSend} base units)`);
+      console.log(
+        `Amount: ${amount} ${metadata.symbol} (${amountToSend} base units)`
+      );
       console.log(`Token Contract: ${tokenContractId}`);
     } catch (error) {
-      console.error(`Failed to get token metadata. Assuming raw units for amount ${amount}.`);
+      console.error(
+        `Failed to get token metadata. Assuming raw units for amount ${amount}.`
+      );
       amountToSend = amount; // Fallback to using the raw amount
     }
   }
@@ -285,18 +292,24 @@ async function executeTransfer(
       // Token transfer (NEP-141)
       console.log('Executing token transfer...');
       tx = await buildTokenTransferTx(
-          sender,
-          receiver,
-          tokenContractId,
-          amountToSend, // Use the converted amount
-          publicKeyHex,
-          near
+        sender,
+        receiver,
+        tokenContractId,
+        amountToSend, // Use the converted amount
+        publicKeyHex,
+        near
       );
     } else {
       // Native NEAR transfer (using the converted yoctoNEAR amount)
       console.log('Executing NEAR transfer...');
       console.log('amountToSend', amountToSend);
-      tx = await buildUnsignedTx(sender, receiver, amountToSend, publicKeyHex, near);
+      tx = await buildUnsignedTx(
+        sender,
+        receiver,
+        amountToSend,
+        publicKeyHex,
+        near
+      );
     }
 
     // Sign the transaction
@@ -309,14 +322,14 @@ async function executeTransfer(
     console.log('Transaction broadcast complete. Result:', broadcastResult);
 
     const txHash =
-        typeof broadcastResult === 'string'
-            ? broadcastResult
-            : broadcastResult.transaction?.hash;
+      typeof broadcastResult === 'string'
+        ? broadcastResult
+        : broadcastResult.transaction?.hash;
 
     if (!txHash) {
       console.error(
-          'Failed to get transaction hash from result:',
-          broadcastResult
+        'Failed to get transaction hash from result:',
+        broadcastResult
       );
       return;
     }
@@ -327,11 +340,11 @@ async function executeTransfer(
     console.log('Waiting for transaction to complete...');
     try {
       const finalResult = await waitForTransaction(
-          txHash,
-          provider,
-          sender,
-          20,
-          2000
+        txHash,
+        provider,
+        sender,
+        20,
+        2000
       );
       console.log('Transaction final status:', finalResult.status);
 
@@ -349,11 +362,11 @@ async function executeTransfer(
 }
 
 async function waitForTransaction(
-    txHash: string,
-    provider: any,
-    accountId: string,
-    maxAttempts: number = 10,
-    interval: number = 1000
+  txHash: string,
+  provider: any,
+  accountId: string,
+  maxAttempts: number = 10,
+  interval: number = 1000
 ): Promise<any> {
   let attempts = 0;
 
@@ -364,16 +377,16 @@ async function waitForTransaction(
   while (attempts < maxAttempts) {
     try {
       console.log(
-          `Checking transaction status (attempt ${
-              attempts + 1
-          }/${maxAttempts})...`
+        `Checking transaction status (attempt ${
+          attempts + 1
+        }/${maxAttempts})...`
       );
 
       const status = await provider.txStatus(formattedHash, accountId);
 
       console.log(
-          'Transaction status response:',
-          JSON.stringify(status, null, 2)
+        'Transaction status response:',
+        JSON.stringify(status, null, 2)
       );
 
       if (status.status) {
@@ -410,12 +423,12 @@ async function waitForTransaction(
  * @returns Unsigned transaction object
  */
 async function buildTokenTransferTx(
-    senderId: string,
-    receiverId: string,
-    tokenContractId: string,
-    amount: string,
-    publicKeyHex: string,
-    near: any
+  senderId: string,
+  receiverId: string,
+  tokenContractId: string,
+  amount: string,
+  publicKeyHex: string,
+  near: any
 ) {
   console.log('Building token transfer transaction...');
   console.log('Token contract:', tokenContractId);
@@ -440,21 +453,21 @@ async function buildTokenTransferTx(
   // Create function call action
   const actions = [
     transactions.functionCall(
-        'ft_transfer', // Method name
-        Buffer.from(JSON.stringify(ftTransferArgs)), // Arguments as buffer
-        BigInt(200000000000000), // Gas (200 TGas)
-        BigInt(1) // Deposit (1 yoctoNEAR required for ft_transfer)
+      'ft_transfer', // Method name
+      Buffer.from(JSON.stringify(ftTransferArgs)), // Arguments as buffer
+      BigInt(200000000000000), // Gas (200 TGas)
+      BigInt(1) // Deposit (1 yoctoNEAR required for ft_transfer)
     ),
   ];
 
   // The receiver of this transaction is the token contract
   return transactions.createTransaction(
-      senderId,
-      publicKey,
-      tokenContractId, // Token contract is the receiver
-      nonce, // Using latest nonce from network
-      actions,
-      bs58.decode(hash)
+    senderId,
+    publicKey,
+    tokenContractId, // Token contract is the receiver
+    nonce, // Using latest nonce from network
+    actions,
+    bs58.decode(hash)
   );
 }
 
@@ -463,13 +476,13 @@ if (require.main === module) {
 
   if (args.length < 4) {
     console.log(
-        'Usage: npx ts-node src/index.ts <sender> <receiver> <privateKeyHex> <amount> [tokenContractId]'
+      'Usage: npx ts-node src/index.ts <sender> <receiver> <privateKeyHex> <amount> [tokenContractId]'
     );
     console.log(
-        'Example for NEAR transfer: npx ts-node src/index.ts sender.near receiver.near privateKeyHex 1.5'
+      'Example for NEAR transfer: npx ts-node src/index.ts sender.near receiver.near privateKeyHex 1.5'
     );
     console.log(
-        'Example for token transfer: npx ts-node src/index.ts sender.near receiver.near privateKeyHex 10 usdc.near'
+      'Example for token transfer: npx ts-node src/index.ts sender.near receiver.near privateKeyHex 10 usdc.near'
     );
     process.exit(1);
   }
@@ -479,12 +492,12 @@ if (require.main === module) {
   // Extract public key from private key (first parameter should be publicKeyHex)
   // For this simplified version, we'll just use the sender as both the publicKeyHex and first parameter
   executeTransfer(
-      sender, // This should be publicKeyHex, but we're using sender as a placeholder
-      sender,
-      receiver,
-      pvtKeyHex,
-      amount,
-      tokenContractId
+    sender, // This should be publicKeyHex, but we're using sender as a placeholder
+    sender,
+    receiver,
+    pvtKeyHex,
+    amount,
+    tokenContractId
   ).catch((error) => {
     console.error('Error executing transfer:', error);
     process.exit(1);
