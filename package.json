@@ -71,7 +71,7 @@
     "postcss": "^8.4.20",
     "prettier": "^2.8.1",
     "sass": "^1.57.1",
-    "vite": "^4.5.13",
+    "vite": "^4.5.14",
     "vite-tsconfig-paths": "^4.0.3"
   },
   "husky": {
