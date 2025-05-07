@@ -59,12 +59,22 @@ Wait for installation to complete
 Type `yarn --version` and press Enter
 You should see a version number like "10.8.2"
 
-### Step 9: Install Dependencies
+### Step 9: Install tsx
+
+Type `npm install --global tsx` and press Enter
+Wait for installation to complete
+
+### Step 10: Verify tsx Installation
+
+Type `tsx --version` and press Enter
+You should see  tsx v4.19.4 node v22.8.0
+
+### Step 11: Install Dependencies
 
 Type `yarn install` and press Enter
 This might take a few minutes to complete
 
-### Step 10: Run the Tool
+### Step 12: Run the Tool
 
 Type `yarn dev:detach` and press Enter
 
