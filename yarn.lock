@@ -195,6 +195,21 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@dfinity/identity@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/identity/-/identity-3.0.1.tgz#28cc764be0bf9688a4b2fa733a6dc89a94e93707"
+  integrity sha512-64pskEOLY+OXH9nKmdvAqKTDtrDhAVrzaDvDUgsKCLmj/3seO2xfumcFAME7/KC/LP3kdaWzdofGhMwXDL8DZQ==
+
+"@dfinity/ledger-icp@4.0.0":
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/@dfinity/ledger-icp/-/ledger-icp-4.0.0.tgz#1ac753aa5853684cb107876533202283da253f4a"
+  integrity sha512-qS5MZu3O9wUpuff9guneqXBlaCdywrvRBQwbkZaPjhcm9zPdmfERgHDQQZQyO7twVMkQeGdgWQpwKR+gn1cSbw==
+
+"@dfinity/utils@2.13.2":
+  version "2.13.2"
+  resolved "https://registry.yarnpkg.com/@dfinity/utils/-/utils-2.13.2.tgz#429d0fbb4e526188215fffd3665e9077f5bc9031"
+  integrity sha512-D9Gkvtj59NQavSClOJjr7xp5cBEahK4ekrTFCFKfdm51V7HHbOnoyTx5vjcWg5x4vdi9dRD6EtEO9UoCp3b7gQ==
+
 "@emotion/babel-plugin@^11.11.0":
   version "11.12.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.12.0.tgz#7b43debb250c313101b3f885eba634f1d723fcc2"
