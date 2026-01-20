@@ -110,14 +110,20 @@ Example: transfer USDC from `8fa58e9a13ee47fb74106d565f6c500f6f5b881a7085adc4438
 
 To send tokens with our ICP wallet script, simply run the following in your terminal:
 
-`npx tsx src/recoveryTransaction/icp.ts <receiver> <privateKeyHex> <amount> <token>`
+`npx tsx src/recoveryTransaction/icp.ts <destinationPrincipal> <privateKeyHex> <publicKeyHex> <amount> <token>`
  
-This uses ts-node to compile and execute the transfer script at src/index.ts. Arguments:
+Arguments:
 
-receiver: recipient’s ICP account
+- **destinationPrincipal**: recipient's Principal (e.g., `xxxxx-xxxxx-xxxxx-xxxxx-cai`)
 
-privateKeyHex: hex key from the recovery process
+- **privateKeyHex**: hex private key from the recovery process
 
-amount: tokens to transfer
+- **publicKeyHex**: DER-encoded hex public key from the recovery process (starts with `302a300506032b6570032100`)
 
-token (optional): like icp, ckbtc
+- **amount**: tokens to transfer (e.g., `1.5` for 1.5 tokens)
+
+- **token**: one of `icp`, `ckbtc`, `cketh`, `ckusdc`, `ckusdt`, `vchf`
+
+Example: transfer 0.001 ckBTC to a recipient:
+ 
+`npx tsx src/recoveryTransaction/icp.ts aaaaa-aa pvtKeyHex pubKeyHex 0.001 ckbtc`

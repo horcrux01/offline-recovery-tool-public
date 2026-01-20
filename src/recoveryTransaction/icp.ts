@@ -11,6 +11,7 @@ const TOKEN_CANISTERS: Record<string, string> = {
   cketh: 'ss2fx-dyaaa-aaaar-qacoq-cai',
   ckusdc: 'xevnm-gaaaa-aaaar-qafnq-cai',
   ckusdt: 'cngnf-vqaaa-aaaar-qag4q-cai',
+  vchf: 'ly36x-wiaaa-aaaai-aqj7q-cai',
 };
 
 class CustomSignerIdentity extends SignIdentity {
