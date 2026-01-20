@@ -1,7 +1,9 @@
-import React, { FC, memo, useRef } from 'react';
-import { Box, Button, IconButton } from '@mui/material';
+import React, { FC, memo, useRef, useState } from 'react';
+import { Box, Button, IconButton, InputAdornment } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CloseIcon from '@mui/icons-material/Close';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 // import useEnhancedEffect from '@mui/material/utils/useEnhancedEffect';
 import ErrorIcon from '@mui/icons-material/Error';
 import ExcheqrTypography from '../shared-resources/ExcheqrTypography';
@@ -35,6 +37,7 @@ const KeyShareUploadComponent: FC<KeyShareCompProps> = ({
 }) => {
   // eslint-disable-next-line
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -162,8 +165,25 @@ const KeyShareUploadComponent: FC<KeyShareCompProps> = ({
         value={passwords[keyIndex]}
         variant='standard'
         placeholder='Passphrase'
-        type='password'
+        type={showPassword ? 'text' : 'password'}
         sx={{ marginTop: '43px' }}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position='end'>
+              <IconButton
+                onClick={() => setShowPassword(!showPassword)}
+                edge='end'
+                size='small'
+              >
+                {showPassword ? (
+                  <VisibilityOffIcon sx={{ color: '#6A707D' }} />
+                ) : (
+                  <VisibilityIcon sx={{ color: '#6A707D' }} />
+                )}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         onChange={(e) => {
           if (e.target.value === '') {
             setPasswords((prev: any) => {
