@@ -51,6 +51,7 @@ const OfflineRecoveryComponent: FC<OfflineRecoveryComponentProps> = () => {
         setFinalPvtKeys(fullPvtKeys);
         setStep(3);
       } catch (e: any) {
+        throw e;
         setIsLoading(false);
         setRecreteError(e.message);
         setStep(2);

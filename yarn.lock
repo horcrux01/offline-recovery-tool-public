@@ -195,6 +195,24 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@dfinity/agent@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/agent/-/agent-3.0.1.tgz#588e6cf40c27116d0e195f4949fb58da972d89ff"
+  integrity sha512-Oqznifki+pkfgghcA3FnlxqMKXe6pjVTDga8HYJDap1IXQy1IFItL+1x1NHFpXJz+cNUf9Pyqq2gzm39uoyjcw==
+  dependencies:
+    "@dfinity/cbor" "^0.2.2"
+    "@noble/curves" "^1.9.2"
+
+"@dfinity/candid@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/candid/-/candid-3.0.1.tgz#48c1abafbc3d6750ec208f58ae47e340c4cbcb8a"
+  integrity sha512-nr0VZxT8NPcL+AKUWNPXGEDhxhBqyYeadKQzDPaPmgdSJ0/gDL2rFGWbqXmb9QOgpjTfpwX9xnDP9yF/XnjGZg==
+
+"@dfinity/cbor@^0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@dfinity/cbor/-/cbor-0.2.2.tgz#4f31f4f0c1aeb0c8179edd99625180a76a5b43e0"
+  integrity sha512-GPJpH73kDEKbUBdUjY80lz7cq9l0vm1h/7ppejPV6O0ZTqCLrYspssYvqjRmK4aNnJ/SKXsP0rg9LYX7zpegaA==
+
 "@dfinity/identity@3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@dfinity/identity/-/identity-3.0.1.tgz#28cc764be0bf9688a4b2fa733a6dc89a94e93707"
@@ -204,6 +222,13 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@dfinity/ledger-icp/-/ledger-icp-4.0.0.tgz#1ac753aa5853684cb107876533202283da253f4a"
   integrity sha512-qS5MZu3O9wUpuff9guneqXBlaCdywrvRBQwbkZaPjhcm9zPdmfERgHDQQZQyO7twVMkQeGdgWQpwKR+gn1cSbw==
+
+"@dfinity/principal@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@dfinity/principal/-/principal-3.0.1.tgz#e700e55b97c1f97649448c678662b18efb2274e8"
+  integrity sha512-hHctj2aPlzxIjmUC6u3m3iu4C9ai/2s4s+8Ze5cJYmS8fZVzKrSzyCmMvB2xlKGSB+SvpMM1+QMMSMxPmUZAtA==
+  dependencies:
+    "@noble/hashes" "^1.8.0"
 
 "@dfinity/utils@2.13.2":
   version "2.13.2"
@@ -860,6 +885,13 @@
   dependencies:
     "@noble/hashes" "1.5.0"
 
+"@noble/curves@^1.9.2":
+  version "1.9.7"
+  resolved "https://registry.yarnpkg.com/@noble/curves/-/curves-1.9.7.tgz#79d04b4758a43e4bca2cbdc62e7771352fa6b951"
+  integrity sha512-gbKGcRUYIjA3/zCCNaWDciTMFI0dCkvou3TL8Zmy5Nc7sJ47a0jtOeZoTaMxkuqRo9cRhjOdZJXegxYE5FN/xw==
+  dependencies:
+    "@noble/hashes" "1.8.0"
+
 "@noble/ed25519@^2.0.0":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@noble/ed25519/-/ed25519-2.2.3.tgz#e189810490302b076e17895b667a06cbe54339f4"
@@ -884,6 +916,11 @@
   version "1.7.2"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.7.2.tgz#d53c65a21658fb02f3303e7ee3ba89d6754c64b4"
   integrity sha512-biZ0NUSxyjLLqo6KxEJ1b+C2NAx0wtDoFvCaXHGgUkeHzf3Xc1xKumFKREuT7f7DARNZ/slvYUwFG6B0f2b6hQ==
+
+"@noble/hashes@1.8.0", "@noble/hashes@^1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
+  integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"

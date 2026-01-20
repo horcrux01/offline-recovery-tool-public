@@ -107,6 +107,8 @@ export const reCreateKeys = async (
     const fileLines: FileLine[] = await parseFileContent(content);
     const decryptedKeySharesData: { [key: string]: string[] } = {};
     for (let i = 1; i < fileLines.length; i += 1) {
+      // try catch block to handle the error
+      try {
       const {
         vaultName,
         chain,
@@ -140,6 +142,10 @@ export const reCreateKeys = async (
         }),
       ];
     }
+    catch (e) {
+      console.error(e);
+    }
+  } 
     return decryptedKeySharesData;
   });
 
