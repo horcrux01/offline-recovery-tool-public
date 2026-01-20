@@ -139,7 +139,7 @@ export const reCreateKeys = async (
           shareId: sharesData[3].toString(),
         }),
       ];
-    }
+  } 
     return decryptedKeySharesData;
   });
 

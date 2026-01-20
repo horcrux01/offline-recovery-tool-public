@@ -64,9 +64,12 @@ const FailedRecovery: FC<FailedRecoveryProps> = ({
           }}
           sx={{
             whiteSpace: 'nowrap',
+            textTransform: 'none',
           }}
         >
-          Try Again
+          <ExcheqrTypography variant='button1' sx={{ color: '#FFFFFF' }}>
+            Try Again
+          </ExcheqrTypography>
         </Button>
       </Box>
     </Box>

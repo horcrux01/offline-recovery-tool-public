@@ -37,24 +37,26 @@ const OfflineRecoveryComponent: FC<OfflineRecoveryComponentProps> = () => {
       );
       if (!isValid) {
         hasError = true;
-        setIsLoading(false);
       }
     }
-    if (!hasError) {
-      try {
-        const fullPvtKeys = await reCreateKeys(
-          Object.values(fileContents),
-          Object.values(passwords),
-          setRecreteError
-        );
-        setIsLoading(false);
-        setFinalPvtKeys(fullPvtKeys);
-        setStep(3);
-      } catch (e: any) {
-        setIsLoading(false);
-        setRecreteError(e.message);
-        setStep(2);
-      }
+    if (hasError) {
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const fullPvtKeys = await reCreateKeys(
+        Object.values(fileContents),
+        Object.values(passwords),
+        setRecreteError
+      );
+      setIsLoading(false);
+      setFinalPvtKeys(fullPvtKeys);
+      setStep(3);
+    } catch (e: any) {
+      setIsLoading(false);
+      setRecreteError(e.message);
+      setStep(2);
     }
   };
 
@@ -134,6 +136,7 @@ const OfflineRecoveryComponent: FC<OfflineRecoveryComponentProps> = () => {
                 await onSubmit();
               }}
               disabled={
+                isLoading ||
                 Object.values(validateFileErrors).length > 0 ||
                 Object.values(validatePasswordErrors).length > 0 ||
                 Object.values(passwords).length < 2 ||
